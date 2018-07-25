@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "google/protobuf/descriptor.proto";
+
+option java_package = "protobuf";
+option java_outer_classname = "Extensions";
+
+extend google.protobuf.FieldOptions {
+  bool   set         = 52001;
+  bool   map         = 52002;
+  string map_by      = 52003;
+  bool   counter     = 52004;
+  bool   succession  = 52005;
+  string map_deleted = 52006;
+  string map_exists  = 52007;
+  string meta        = 52010;
+  bool   nullable    = 52020;
+  string null_string = 52021;
+  sint32 null_int    = 52022;
+  sint64 null_long   = 52023;
+  float  null_float  = 52024;
+  double null_double = 52025;
+  uint32 null_enum   = 52026;
+}
