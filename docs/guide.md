@@ -1,11 +1,20 @@
 proto2spec Guide
 ================
 
+To get started run this command to run Clojure with the library:
+```sh
+$ clojure -Sdeps '{:deps {io.gamayun/proto2spec {:mvn/version "0.2.0"}}}'
+Downloading: io/gamayun/proto2spec/0.2.0/proto2spec-0.2.0.pom from https://clojars.org/repo/
+Downloading: io/gamayun/proto2spec/0.2.0/proto2spec-0.2.0.jar from https://clojars.org/repo/
+Clojure 1.9.0
+user=>
+```
+
 The proto-spec function allows you to automatically create Clojure
 Specs for a given protobuf class. We will start out by importing some
-libraries as well at the porotobuf class.
+libraries as well at the protobuf class.
 ```clojure
-user> (require '[proto2spec.core :refer [proto-spec]]
+user=> (require '[proto2spec.core :refer [proto-spec]]
                '[protobuf.core :as proto]
                '[clojure.spec.alpha :as s]
                '[spec-tools.core :as st]
@@ -13,13 +22,13 @@ user> (require '[proto2spec.core :refer [proto-spec]]
                '[clojure.spec.gen.alpha :as gen]
                '[clojure.spec.test.alpha :as stest])
 nil
-user> (import '[examples Photo])
+user=> (import '[examples Photo])
 examples.Photo
 ```
 
-We can use the `proto/schema` function to view the Protobuf schema.
+We can use the `proto/schema` function to view the protobuf schema.
 ```clojure
-user> (proto/schema Photo)
+user=> (proto/schema Photo)
 {:type :struct,
  :name "protobuf.examples.photo.Photo",
  :fields
@@ -46,9 +55,9 @@ user> (proto/schema Photo)
 
 Now we will generate the specs and view them in the registry.
 ```clojure
-user> (proto-spec Photo)
+user=> (proto-spec Photo)
 :protobuf.examples.photo/Photo
-user> (keys (st/registry #"protobuf.*"))
+user=> (keys (st/registry #"protobuf.*"))
 (:protobuf.examples.photo$Photo/tags
  :protobuf.examples.photo/Photo
  :protobuf.examples.photo$Photo/type
@@ -68,7 +77,7 @@ user> (keys (st/registry #"protobuf.*"))
 
 We can validate data in our programs using this generated spec.
 ```clojure
-user> (s/valid? :protobuf.examples.photo$Photo/type :tiff)
+user=> (s/valid? :protobuf.examples.photo$Photo/type :tiff)
 false
 ```
 
@@ -79,7 +88,7 @@ this case, we can see that our attributes field requires a mapping of
 instant. These can get to be more complicated as the domain model
 gets more precise.
 ```clojure
-user> (s/explain :protobuf.examples.photo$Photo/attrs
+user=> (s/explain :protobuf.examples.photo$Photo/attrs
                  {"location" "Spain","time" #inst "2017-01-20T08:30:00Z"})
 In: ["time" 1] val: #inst "2017-01-20T08:30:00.000-00:00" fails spec: :protobuf.examples.photo$Photo/attrs at: [1] predicate: string?
 
@@ -89,9 +98,9 @@ We can even generate data using our spec. Here is an example of
 generating an entire Photo object. We can use this data to test our
 code using a technique called generative testing. More on this later.
 ```clojure
-user> (def example-photo (gen/generate (s/gen :protobuf.examples.photo/Photo)))
+user=> (def example-photo (gen/generate (s/gen :protobuf.examples.photo/Photo)))
 #'user/example-photo
-user> example-photo
+user=> example-photo
 {:id 92,
  :path "cl8umsilsjMEeShgoKq9retj",
  :labels
@@ -117,7 +126,7 @@ user> example-photo
 This object is ready to be serialized into protobuf and sent to
 other systems for testing as welll.
 ```clojure
-user> (->> example-photo (proto/create Photo) (proto/->bytes))
+user=> (->> example-photo (proto/create Photo) (proto/->bytes))
 [8, 92, 18, 24, 99, 108, 56, 117, 109, 115, 105, 108, 115, 106, 77,
  69, 101, 83, 104, 103, 111, 75, 113, 57, 114, 101, 116, 106, 26, 20,
  10, 16, 52, 122, 112, 105, 111, 55, 51, 112, 90, 78, 101, 104, 66,
@@ -142,13 +151,13 @@ be positive integers. To capture this fact, we will refine the
 generated spec. This essentially `s/and`'s the provided predicate onto
 the generated spec.
 ```clojure
-user> (def options
+user=> (def options
         {:refinements
          {:protobuf.examples.photo$Photo/id pos-int?}})
 #'user/options
-user> (proto-spec Photo options)
+user=> (proto-spec Photo options)
 :protobuf.examples.photo/Photo
-user> (gen/sample (s/gen :protobuf.examples.photo$Photo/id))
+user=> (gen/sample (s/gen :protobuf.examples.photo$Photo/id))
 (1 1 1 7 7 1 7 169 4 27)
 ```
 
@@ -161,16 +170,16 @@ specific knowledge. While many of these can be captured
 as :refinements, it is sometimes easier to just replace the
 generated spec with our own.
 ```clojure
-user> (def options
+user=> (def options
         {:replacements
          {:protobuf.examples.photo.Photo$Tag/y-coord 
           (s/double-in :min 0.0 :max 100.0 :infinite? false :NaN? false)
           :protobuf.examples.photo.Photo$Tag/x-coord 
           (s/double-in :min 0.0 :max 100.0 :infinite? false :NaN? false)}})
 #'user/options
-user> (proto-spec Photo options)
+user=> (proto-spec Photo options)
 :protobuf.examples.photo/Photo
-user> (gen/sample (s/gen :protobuf.examples.photo.Photo/Tag) 2)
+user=> (gen/sample (s/gen :protobuf.examples.photo.Photo/Tag) 2)
 ({:person-id -1, :x-coord 0.5, :y-coord 0.5, :width -1, :height -1}
  {:person-id 0, :x-coord 2.0, :y-coord 0.5, :width 0, :height 0})
 ```
@@ -187,17 +196,17 @@ will update the labels generator to produce more domain matching
 labels.
 
 ```clojure
-user> (def labels-gen
+user=> (def labels-gen
         #(gen/set
           (gen/elements ["spain" "food" "holiday" "family"])))
 #'user/labels-gen
-user> (def options
+user=> (def options
         {:generators
          {:protobuf.examples.photo$Photo/labels labels-gen}})
 #'user/options
-user> (proto-spec Photo options)
+user=> (proto-spec Photo options)
 :protobuf.examples.photo/Photo
-user> (gen/sample (s/gen :protobuf.examples.photo$Photo/labels))
+user=> (gen/sample (s/gen :protobuf.examples.photo$Photo/labels))
 (#{}
  #{}
  #{}
@@ -220,17 +229,17 @@ with `attr-`. The chances that the default string generator will
 create strings in that format is exceedingly low.
 
 ```clojure
-user> (defn attr-string? [s]
+user=> (defn attr-string? [s]
         (str/starts-with? s "attr-"))
 #'user/attr-string?
-user> (def options
+user=> (def options
         {:refinements
          {:protobuf.examples.photo$Photo/attrs 
           (s/map-of attr-string? string? :min-count 1 :max-count 3)}})
 #'user/options
-user> (proto-spec Photo options)
+user=> (proto-spec Photo options)
 :protobuf.examples.photo/Photo
-user> (gen/sample (s/gen :protobuf.examples.photo$Photo/attrs))
+user=> (gen/sample (s/gen :protobuf.examples.photo$Photo/attrs))
 "ExceptionInfo Couldn't satisfy such-that predicate after 100 tries.
   clojure.core/ex-info (core.clj:4739)"
 ```
@@ -239,29 +248,29 @@ To fix this, we can provide a generate which will make keys attribute
 maps in the correct format.
 
 ```clojure
-user> (def attr-key-gen
+user=> (def attr-key-gen
         #(gen/bind
           (gen/such-that
            not-empty
            (gen/string-alphanumeric))
           (fn [s] (gen/return (str "attr-" s)))))
 #'user/attr-key-gen
-user> (def attr-gen
+user=> (def attr-gen
         #(gen/bind
           (gen/list (gen/tuple (attr-key-gen)
                                (gen/string-alphanumeric)))
           (fn [kvs] (gen/return (into {} kvs)))))
 #'user/attr-gen
-user> (def options
+user=> (def options
         {:refinements
          {:protobuf.examples.photo$Photo/attrs
           (s/map-of attr-string? string? :min-count 1 :max-count 3)}         
          :generators
          {:protobuf.examples.photo$Photo/attrs attr-gen}})
 #'user/options
-user> (proto-spec Photo options)
+user=> (proto-spec Photo options)
 :protobuf.examples.photo/Photo
-user> (gen/sample (s/gen :protobuf.examples.photo$Photo/attrs))
+user=> (gen/sample (s/gen :protobuf.examples.photo$Photo/attrs))
 ({"attr-f" "x0"}
  {"attr-c" ""}
  {"attr-04z" "W", "attr-9" "Hf"}
@@ -294,13 +303,13 @@ the documentation for what can be done.
 In this particular example, we have a little bug where mixed up
 height and width.
 ```clojure
-user> (defn coordinates
+user=> (defn coordinates
         [{x :x-coord y :y-coord height :width width :height}]
         (let [scaled-x (Math/round (* (/ x 100.0) width))
               scaled-y (Math/round (* (/ y 100.0) height))]
           [scaled-x scaled-y]))
 #'user/coordinates
-user> (s/fdef coordinates
+user=> (s/fdef coordinates
         ;; Receives a Tag as an argument
         :args (s/cat :tag :protobuf.examples.photo.Photo/Tag)
         ;; Returns a pair of natural integers
@@ -317,9 +326,9 @@ finds an error, it will try to shrink the input to find the
 smallest possible instance of that error. You can see and elided
 output below in the comment.
 ```clojure
-user> (stest/instrument `coordinates)
+user=> (stest/instrument `coordinates)
 [user/coordinates]
-user> (stest/summarize-results (stest/check `coordinates))
+user=> (stest/summarize-results (stest/check `coordinates))
 {:failure
  {:clojure.spec.alpha/problems
   [{:path [:fn],
@@ -343,13 +352,13 @@ user> (stest/summarize-results (stest/check `coordinates))
 
 Now that we know the error, we can fix our function.
 ```clojure
-user> (defn coordinates
+user=> (defn coordinates
         [{x :x-coord y :y-coord width :width height :height}]
         (let [scaled-x (Math/round (* (/ x 100.0) width))
               scaled-y (Math/round (* (/ y 100.0) height))]
           [scaled-x scaled-y]))
 #'user/coordinates
-user> (stest/summarize-results (stest/check `coordinates))
+user=> (stest/summarize-results (stest/check `coordinates))
 {:sym photo/coordinates}
 {:total 1, :check-passed 1}
 ```

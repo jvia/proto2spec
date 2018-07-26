@@ -2,28 +2,40 @@
 
 This library converts Protobuf into Clojure Spec definitions.
 
+[![Clojars Project](https://img.shields.io/clojars/v/io.gamayun/proto2spec.svg)](https://clojars.org/io.gamayun/proto2spec)
+
 ## Usage
 
 :wave: A fuller tutorial of what can be done exists [here](docs/guide.md).
 
+To get started run this command to run Clojure with the library:
+```sh
+$ clojure -Sdeps '{:deps {io.gamayun/proto2spec {:mvn/version "0.2.0"}}}'
+Downloading: io/gamayun/proto2spec/0.2.0/proto2spec-0.2.0.pom from https://clojars.org/repo/
+Downloading: io/gamayun/proto2spec/0.2.0/proto2spec-0.2.0.jar from https://clojars.org/repo/
+Clojure 1.9.0
+user=>
+```
+
 Import the required libraries as well the example.Photo protobuf
 class. With this, we can now auto-create the specs using `proto-spec`.
+
 ```clojure
-user> (require '[proto2spec.core :refer [proto-spec]]
+user=> (require '[proto2spec.core :refer [proto-spec]]
                '[clojure.spec.alpha :as s]
                '[spec-tools.core :as st]
                '[clojure.spec.gen.alpha :as gen])
 nil
-user> (import '[examples Photo])
+user=> (import '[examples Photo])
 examples.Photo
-user> (proto-spec Photo)
+user=> (proto-spec Photo)
 :protobuf.examples.photo/Photo
 ```
 
 
 You can now check out the specs we just created
 ```clojure
-user> (keys (st/registry #"protobuf.*"))
+user=> (keys (st/registry #"protobuf.*"))
 (:protobuf.examples.photo$Photo/tags
  :protobuf.examples.photo/Photo
  :protobuf.examples.photo$Photo/type
@@ -43,9 +55,9 @@ user> (keys (st/registry #"protobuf.*"))
 
 We can now validate data as well as generate it:
 ```clojure
-user> (s/valid?  :protobuf.examples.photo$Photo/id 1)
+user=> (s/valid?  :protobuf.examples.photo$Photo/id 1)
 true
-user> (gen/generate (s/gen :protobuf.examples.photo/Photo))
+user=> (gen/generate (s/gen :protobuf.examples.photo/Photo))
 {:id 308212705,
  :path "9a",
  :labels #{"food" "family" "spain"},
