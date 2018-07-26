@@ -3,7 +3,7 @@ proto2spec Guide
 
 The proto-spec function allows you to automatically create Clojure
 Specs for a given protobuf class. We will start out by importing some
-libraries as well at the porotobuf class.
+libraries as well as the protobuf class.
 ```clojure
 user> (require '[proto2spec.core :refer [proto-spec]]
                '[protobuf.core :as proto]
