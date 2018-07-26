@@ -14,6 +14,13 @@
 
   :plugins [[lein-shell "0.5.0"]]
 
+  :release-tasks [["vcs" "assert-committed"]
+                  ["change" "version"
+                   "leiningen.release/bump-version" "release"]
+                  ["vcs" "commit"]
+                  ["vcs" "tag" "--no-sign"]
+                  ["deploy"]]
+
   :profiles {:dev {:source-paths ["dev"]
                    :dependencies [[org.clojure/test.check "0.9.0"]]}
              :test {:resource-paths ["test-resources"]
