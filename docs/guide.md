@@ -1,7 +1,7 @@
 proto2spec Guide
 ================
 
-To get started run this command to run Clojure with the library:
+To get started run this command to run Clojure ([install instruction](https://clojure.org/guides/getting_started)) with the library:
 ```sh
 $ clojure -Sdeps '{:deps {io.gamayun/proto2spec {:mvn/version "0.2.0"}}}'
 Downloading: io/gamayun/proto2spec/0.2.0/proto2spec-0.2.0.pom from https://clojars.org/repo/
