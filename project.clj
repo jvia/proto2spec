@@ -14,7 +14,7 @@
 
   :plugins [[lein-shell "0.5.0"]]
 
-  {:deploy-repositories [["releases" :clojars]]}
+  :deploy-repositories [["releases" :clojars]]
   :release-tasks [["vcs" "assert-committed"]
                   ["change" "version"
                    "leiningen.release/bump-version" "release"]
@@ -22,6 +22,5 @@
                   ["vcs" "tag" "--no-sign"]
                   ["deploy"]]
 
-  :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]}
-             :test {:resource-paths ["test-resources"]
-                    :java-source-paths ["target/examples"]}})
+  :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]
+                   :java-source-paths ["target/examples"]}})
