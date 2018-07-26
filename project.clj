@@ -14,6 +14,7 @@
 
   :plugins [[lein-shell "0.5.0"]]
 
+  {:deploy-repositories [["releases" :clojars]]}
   :release-tasks [["vcs" "assert-committed"]
                   ["change" "version"
                    "leiningen.release/bump-version" "release"]
