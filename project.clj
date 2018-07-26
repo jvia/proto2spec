@@ -11,6 +11,7 @@
   :prep-tasks [["shell" "mkdir" "-p" "target/examples"]
                ["shell" "protoc" "-I=/usr/include" "-I=/usr/local/include" "-I=resources" "--java_out=target/examples" "resources/protobuf/examples/photo.proto"]
                ["javac"]]
+  :java-source-paths ["target/examples"]
 
   :plugins [[lein-shell "0.5.0"]]
 
@@ -22,5 +23,4 @@
                   ["vcs" "tag" "--no-sign"]
                   ["deploy"]]
 
-  :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]
-                   :java-source-paths ["target/examples"]}})
+  :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]}})
