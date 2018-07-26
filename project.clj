@@ -1,4 +1,4 @@
-(defproject io.gamayun/proto2spec "0.1.0-SNAPSHOT"
+(defproject io.gamayun/proto2spec "0.1.0"
   :description "A Clojure Spec generator for Google Protocol Buffers."
   :url "https://github.com/jvia/proto2spec"
   :license {:name "Eclipse Public License"
