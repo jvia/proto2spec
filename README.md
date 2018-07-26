@@ -4,10 +4,9 @@ This library converts Protobuf into Clojure Spec definitions.
 
 ## Usage
 
-:wave: A fuller tutorial of what can be done exists at [photo.clj](dev/photo.clj).
+:wave: A fuller tutorial of what can be done exists [here](docs/guide.md).
 
-
-Import the required libraries as well the example.Photo protobuif
+Import the required libraries as well the example.Photo protobuf
 class. With this, we can now auto-create the specs using `proto-spec`.
 ```clojure
 user> (require '[proto2spec.core :refer [proto-spec]]
