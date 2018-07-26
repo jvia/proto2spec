@@ -22,7 +22,6 @@
                   ["vcs" "tag" "--no-sign"]
                   ["deploy"]]
 
-  :profiles {:dev {:source-paths ["dev"]
-                   :dependencies [[org.clojure/test.check "0.9.0"]]}
+  :profiles {:dev {:dependencies [[org.clojure/test.check "0.9.0"]]}
              :test {:resource-paths ["test-resources"]
                     :java-source-paths ["target/examples"]}})
